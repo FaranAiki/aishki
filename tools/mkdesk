@@ -1,0 +1,43 @@
+#!/bin/sh
+
+appdir="$HOME/.local/share/applications/mkdesk"
+
+if [ "$1" = "-w" ] || [ "$1" = "-win" ] || [ "$1" = "-exe" ]; then
+	fname="$2"
+	fullpath=$(realpath -s "$fname")
+ 
+	out="${appdir}/${fname}.desktop"
+
+	mkdir -p ${appdir}
+
+	if test -f $out; then
+		echo 'File already exists, are you sure you want to overwrite? (y/N)'
+		read -p '> ' ans
+		if [ ! "$ans" = "y" ]; then
+			exit 1
+		fi
+	fi
+
+	echo "Sent to $out"
+
+	printf "[Desktop Entry]\n" > $out
+	printf "Name=${fname}\n" >> $out
+	printf "Type=Application\n" >> $out
+	printf "StartupNotify=true\n" >> $out
+	printf "Path=$(dirname ${fullpath})\n" >> $out
+	printf "Exec=${fullpath}\n" >> $out
+	printf "StartupWMClass=${fname}" >> $out
+
+	# TODO implement icon
+
+	echo "Finished"
+elif [ "$1" = "-d" ] || [ "$1" = "-del" ] || [ "$1" = "-delete" ]; then
+	fname="$2"
+	out="${appdir}/${fname}.desktop"
+
+	rm $out
+else 
+	echo "Usage:"
+	echo "  mkdesk -w [FILENAME] or mkdesk -win [FILENAME] or mkdesk -exe [FILENAME] or mkdesk -windows [FILENAME]"
+	echo "  mkdesk -d [FILENAME] or mkdesk -del [FILENAME] or mkdesk -delete [FILENAME]"
+fi
