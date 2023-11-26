@@ -1,0 +1,16 @@
+`aishki` is a compilation of shell script used
+by me to integrate nihwm and others to be a 
+good united "Desktop Environment"
+
+List of config available:
+	..
+
+List of tools available:
+	mkdesk
+		to create a [Desktop Entry] for `rofi -show drun`
+
+To install in to the system, type:
+	./install [COMMAND]
+	# ./install all    -> will install config, tools, ...
+	# ./install tools  -> will only install tools
+	# ./install echo 3 -> will output 3
