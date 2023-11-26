@@ -1,0 +1,43 @@
+#!/bin/sh
+
+set -eu
+
+VERSION=0.1
+
+PREFIX="/usr/local"
+MANPREFIX="${PREFIX}/share/man"
+
+if [ "$EUID" -ne 0 ]; then
+	echo "Please run as root"
+	exit 127
+fi
+
+tools() {
+	mkdir -p "${PREFIX}/bin"
+	mkdir -p "${MANPREFIX}/man1"
+
+	echo "Installing mkdesk"
+	cp -f "tools/mkdesk" "${PREFIX}/bin"
+	cp -f "tools/mkdesk.1" "${MANPREFIX}/man1"
+	chmod +x "${PREFIX}/bin/mkdesk"
+	echo "Success"
+
+	echo "Finished installing tools"
+}
+
+all() {
+	tools
+	echo "Finished installing all"
+}
+
+if [ "$1" == "--help" ] || [ "$1" == "" ]; then
+	echo "Install options:"
+	echo "  --help"
+	echo "  tools"
+	echo "  all"
+	echo
+	echo "Beware that install [COMMAND] will result in the execution of [COMMAND]"
+	exit 1
+fi
+
+$1

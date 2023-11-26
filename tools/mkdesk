@@ -1,14 +1,41 @@
 #!/bin/sh
 
-appdir="$HOME/.local/share/applications/mkdesk"
+# (C) Muhammad Faran Aiki 2023
 
-if [ "$1" = "-w" ] || [ "$1" = "-win" ] || [ "$1" = "-exe" ]; then
-	fname="$2"
-	fullpath=$(realpath -s "$fname")
+# Made to make a [Desktop Entry] for Windows applications 
+# so that Rofi can detect them
+
+# See a YouTube video on this
+# TODO INCOMING
+
+set -eu
+
+depend_on() {
+	if ! [ -x $(command -v $1) ]; then
+		echo Please install package which offers $1
+		exit 1
+	fi
+}
+
+
+local_appdir="$HOME/.local/share/applications/mkdesk"
+local_icondir="$HOME/.local/icons/mkdesk"
+
+# Dependencies
+depend_on wrestool
+
+# Windows
+if [ "$1" = "-w" ] || [ "$1" = "--win" ] || [ "$1" = "--exe" ]; then
+	appdir="$local_appdir"
+	icondir="$local_icondir"
+
+	fullpath=$(realpath -s "$2")
+	fname=${2%.*};
  
 	out="${appdir}/${fname}.desktop"
 
 	mkdir -p ${appdir}
+	mkdir -p ${icondir}
 
 	if test -f $out; then
 		echo 'File already exists, are you sure you want to overwrite? (y/N)'
@@ -26,18 +53,34 @@ if [ "$1" = "-w" ] || [ "$1" = "-win" ] || [ "$1" = "-exe" ]; then
 	printf "StartupNotify=true\n" >> $out
 	printf "Path=$(dirname ${fullpath})\n" >> $out
 	printf "Exec=${fullpath}\n" >> $out
-	printf "StartupWMClass=${fname}" >> $out
+	printf "StartupWMClass=${fname}.exe\n" >> $out
 
 	# TODO implement icon
+	echo "Extracting Icon"
+	wrestool -x -t14 "${fullpath}" > "${icondir}/${fname}.ico"
+
+	echo "Icon extracted, adding to $out"
+	printf "Icon=${icondir}/${fname}.ico\n" >> $out
 
 	echo "Finished"
-elif [ "$1" = "-d" ] || [ "$1" = "-del" ] || [ "$1" = "-delete" ]; then
-	fname="$2"
+elif [ "$1" = "-d" ] || [ "$1" = "--del" ] || [ "$1" = "--delete" ]; then
+	appdir="$local_appdir"
+	icondir="$local_icondir"
+
+	fname="${2%.*}";
 	out="${appdir}/${fname}.desktop"
 
-	rm $out
+	echo "Deleting $out"
+	rm "$out"
+	echo "Deleting icon"
+	rm "${icondir}/${fname}.ico" 
+	echo "Finished"
+elif [ "$1" = "-l" ] || [ "$1" = "--list" ]; then
+	printf "In local:\n"
+	ls -1 "$local_appdir" | sed -e 's/\.desktop$//'
 else 
 	echo "Usage:"
-	echo "  mkdesk -w [FILENAME] or mkdesk -win [FILENAME] or mkdesk -exe [FILENAME] or mkdesk -windows [FILENAME]"
-	echo "  mkdesk -d [FILENAME] or mkdesk -del [FILENAME] or mkdesk -delete [FILENAME]"
+	echo "  mkdesk -w [FILENAME] or mkdesk --win [FILENAME] or mkdesk --exe [FILENAME] or mkdesk -windows [FILENAME]"
+	echo "  mkdesk -d [FILENAME] or mkdesk --del [FILENAME] or mkdesk --delete [FILENAME]"
+	echo "  mkdesk -l or mkdesk --list"
 fi
