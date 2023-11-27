@@ -12,15 +12,24 @@ if [ "$EUID" -ne 0 ]; then
 	exit 127
 fi
 
+pli_tools() {
+	if [ "$#" -eq 0 ]; then
+		exit 1;
+	fi
+
+	echo "Installing $1"
+	cp -f "tools/$1" "${PREFIX}/bin"
+	cp -f "tools/$1.1" "${MANPREFIX}/man1"
+	chmod +x "${PREFIX}/bin/$1"
+	echo "Success"
+}
+
 tools() {
 	mkdir -p "${PREFIX}/bin"
 	mkdir -p "${MANPREFIX}/man1"
 
-	echo "Installing mkdesk"
-	cp -f "tools/mkdesk" "${PREFIX}/bin"
-	cp -f "tools/mkdesk.1" "${MANPREFIX}/man1"
-	chmod +x "${PREFIX}/bin/mkdesk"
-	echo "Success"
+	pli_tools mkdesk	
+	pli_tools miplay	
 
 	echo "Finished installing tools"
 }
@@ -35,6 +44,7 @@ if [ "$1" == "--help" ] || [ "$1" == "" ]; then
 	echo "  --help"
 	echo "  tools"
 	echo "  all"
+	echo "  pli_tools"
 	echo
 	echo "Beware that install [COMMAND] will result in the execution of [COMMAND]"
 	exit 1

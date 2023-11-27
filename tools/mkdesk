@@ -31,8 +31,14 @@ if [ "$1" = "-w" ] || [ "$1" = "--win" ] || [ "$1" = "--exe" ]; then
 
 	fullpath=$(realpath -s "$2")
 	fname=${2%.*};
- 
-	out="${appdir}/${fname}.desktop"
+
+	if [ "$3" == "" ]; then
+		modfname=$fname
+	else 
+		modfname="$3"
+	fi
+
+	out="${appdir}/${modfname}.desktop"
 
 	mkdir -p ${appdir}
 	mkdir -p ${icondir}
@@ -48,14 +54,13 @@ if [ "$1" = "-w" ] || [ "$1" = "--win" ] || [ "$1" = "--exe" ]; then
 	echo "Sent to $out"
 
 	printf "[Desktop Entry]\n" > $out
-	printf "Name=${fname}\n" >> $out
+	printf "Name=${modfname}\n" >> $out
 	printf "Type=Application\n" >> $out
 	printf "StartupNotify=true\n" >> $out
 	printf "Path=$(dirname ${fullpath})\n" >> $out
 	printf "Exec=${fullpath}\n" >> $out
 	printf "StartupWMClass=${fname}.exe\n" >> $out
 
-	# TODO implement icon
 	echo "Extracting Icon"
 	wrestool -x -t14 "${fullpath}" > "${icondir}/${fname}.ico"
 
@@ -63,6 +68,8 @@ if [ "$1" = "-w" ] || [ "$1" = "--win" ] || [ "$1" = "--exe" ]; then
 	printf "Icon=${icondir}/${fname}.ico\n" >> $out
 
 	echo "Finished"
+elif [ "$1" = "-l" ] || [ "$1" = "--linux" ]; then
+	#TODO implement Linux
 elif [ "$1" = "-d" ] || [ "$1" = "--del" ] || [ "$1" = "--delete" ]; then
 	appdir="$local_appdir"
 	icondir="$local_icondir"
@@ -72,15 +79,21 @@ elif [ "$1" = "-d" ] || [ "$1" = "--del" ] || [ "$1" = "--delete" ]; then
 
 	echo "Deleting $out"
 	rm "$out"
+	
 	echo "Deleting icon"
 	rm "${icondir}/${fname}.ico" 
+	
 	echo "Finished"
 elif [ "$1" = "-l" ] || [ "$1" = "--list" ]; then
 	printf "In local:\n"
 	ls -1 "$local_appdir" | sed -e 's/\.desktop$//'
-else 
-	echo "Usage:"
-	echo "  mkdesk -w [FILENAME] or mkdesk --win [FILENAME] or mkdesk --exe [FILENAME] or mkdesk -windows [FILENAME]"
-	echo "  mkdesk -d [FILENAME] or mkdesk --del [FILENAME] or mkdesk --delete [FILENAME]"
-	echo "  mkdesk -l or mkdesk --list"
+else
+	# Helper
+	echo "mkdesk usage:"
+	echo "  -w [FILENAME]; -win [FILENAME]; --exe [FILENAME]; --windows [FILENAME]"
+	echo "  -w [FILENAME] [OPTIONAL NAME]"
+	echo "  "
+	echo "  -d [FILENAME]; --del [FILENAME]; --delete [FILENAME]"
+	echo "  "
+	echo "  -l; --list"
 fi

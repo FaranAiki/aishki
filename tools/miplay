@@ -1,0 +1,90 @@
+#!/bin/bash
+
+set -u
+
+# TODO make it faster... yt-dlp implementation?
+
+# Automate downloading for music
+# and usually found in ./Music directory
+
+depend_on() {
+	if ! [ -x $(command -v $1) ]; then
+		echo Please install $1
+		exit 1
+	fi
+}
+
+depend_on yt-dlp
+
+install_music() {
+	if [ "$#" -ge 1 ]; then
+		yt-dlp -x --audio-format mp3 "$1" --no-playlist
+	fi
+}
+
+install_audio() {
+	if [ "$#" -ge 1 ]; then
+		yt-dlp -x --audio-format wav "$1" --no-playlist
+	fi
+}
+
+install_video() {
+	if [ "$#" -ge 1 ]; then
+		yt-dlp -S "$1"
+	fi
+}
+
+play_install_music() {
+	if [ "$#" -eq 0 ]; then
+		exit 1
+	fi
+
+	fn=$(yt-dlp --print "%(title)s" "$1") # fix slow
+	url=$(echo "$1" | cut -d'=' -f2)
+	
+	install_music $1
+	
+	if [ "$#" -ge 2  ]; then
+		echo $fn
+		MUSIC_PLAYER="$2"
+	
+	fi
+
+	$MUSIC_PLAYER "$fn [$url].mp3" 
+}
+
+# URGENT TODO FIX IT TO MAKE IT PROPERY
+
+MUSIC_PLAYER="rhythmbox"
+
+if [ "$#" -ge 2 ] && [ "$1" == "-a" ] || [ "$1" == "--audio" ]; then # install only
+	install_audio $2
+elif [ "$#" -ge 2 ] && [ "$1" == "-m" ] || [ "$1" == "--music" ]; then
+	if [ "$#" -ge 3 ]; then
+		play_install_music "$2" "$3"
+	else
+		play_install_music "$2"
+	fi
+elif [ "$#" -ge 2 ] && [ "$1" == "-b" ] || [ "$1" == "--batch" ]; then
+	for url in "$@"; do
+		if [ "$url" != "$1" ]; then # this is bloat
+			play_install_music "$url"	
+		fi	
+	done
+elif [ "$#" -ge 3 ] && [ "$1" == "-bw" ] || [ "$2" == "--batchwith" ]; then
+	for url in "$@"; do
+		if [ "$url" != "$1" ] && [ "$url" != "$2" ]; then # this is bloat
+			play_install_music "$url" "$2" 	
+		fi	
+	done
+elif [ "$#" -ge 2 ] && [ "$1" == "-v" ] || [ "$1" == "--video" ]; then #TODO implement this
+	install_video $2	
+else
+	echo "miplay usage:"
+	echo "  -m or --music [URL] [OPTIONAL:music player]"
+	echo "  -a or --audio [URL]"
+	echo "  -v or --video [URL]"
+	echo " "
+	echo "dependencies:"
+	echo "  yt-dlp"
+fi
