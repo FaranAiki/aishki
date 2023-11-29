@@ -34,23 +34,24 @@ install_video() {
 	fi
 }
 
+# TODO fix this
 play_install_music() {
 	if [ "$#" -eq 0 ]; then
 		exit 1
 	fi
 
-	fn=$(yt-dlp --print "%(title)s" "$1") # fix slow
 	url=$(echo "$1" | cut -d'=' -f2)
-	
+
 	install_music $1
-	
+
+	fn=$(ls -1 | grep $url)
+
+	echo Playing "'$fn'"
 	if [ "$#" -ge 2  ]; then
-		echo $fn
-		MUSIC_PLAYER="$2"
-	
+		MUSIC_PLAYER="$2"	
 	fi
 
-	$MUSIC_PLAYER "$fn [$url].mp3" 
+	$MUSIC_PLAYER "$fn" 
 }
 
 # URGENT TODO FIX IT TO MAKE IT PROPERY
