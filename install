@@ -1,11 +1,15 @@
 #!/bin/sh
 
+# (C) Copyright 2023 Muhammad Faran Aiki
+# Installation of my shell scripts
+
 set -eu
 
 cd $(dirname "$0")
 
 VERSION=0.1
 
+USER="/home/${SUDO_USER}"
 PREFIX="/usr/local"
 MANPREFIX="${PREFIX}/share/man"
 
@@ -36,7 +40,26 @@ tools() {
 	echo "Finished installing tools"
 }
 
+config() {
+	echo "Are you really sure you want to install config? (it will override your current config) [y/N]"
+	read -p "> " ans
+
+	if [ "$ans" != "y" ];
+	then
+		return
+	fi
+
+	echo "Configuring .bashrc"
+	cp -f "config/.bashrc" "${USER}"
+
+	echo "Configuring .zshrc"
+	cp -f "config/.zshrc" "${USER}"
+	
+	echo "Finished installing config"
+}
+
 all() {
+	config
 	tools
 	echo "Finished installing all"
 }
@@ -44,8 +67,9 @@ all() {
 if [ "$1" == "--help" ] || [ "$1" == "" ]; then
 	echo "Install options:"
 	echo "  --help"
-	echo "  tools"
 	echo "  all"
+	echo "  tools"
+	echo "  config"
 	echo "  pli_tools"
 	echo
 	echo "Beware that install [COMMAND] will result in the execution of [COMMAND]"

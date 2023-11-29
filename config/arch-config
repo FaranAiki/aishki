@@ -1,0 +1,21 @@
+#!/bin/sh
+
+# Run every update
+# instead of pacman -Syu
+
+packages() {
+	linux	
+}
+
+update() {
+	pacman -Sy
+}
+
+# Checking
+echo "Are you sure you want to download? [y/N]"
+read -p ans
+
+if [ "$ans" != "y" ]; then
+	echo Aborted
+	exit 1
+fi
