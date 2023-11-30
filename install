@@ -64,7 +64,12 @@ all() {
 	echo "Finished installing all"
 }
 
-if [ "$1" == "--help" ] || [ "$1" == "" ]; then
+if [ "$#" -eq 1 ]; then
+	all
+	exit 0
+fi
+
+if [ "$1" == "--help" ]; then
 	echo "Install options:"
 	echo "  --help"
 	echo "  all"

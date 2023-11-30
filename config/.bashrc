@@ -128,9 +128,9 @@ PS2='$(printf " %.0s" $(_ expr -3 + $__add_ps_script + $(_ __get_directory | _ w
 
 # Welcome
 
-if [ "$USERNAME" = "" ] || [ "$USERNAME" = "root" ]
+if [ "$USER" = "" ] || [ "$USER" =  "root" ]
 then
-	printf "\033[1;93mWarning\033[m, you are using root account."
+	printf "\033[1;93mWarning\033[m, you are using root account.\n"
 	printf "Flags used in this Bash are \033[1;34m'$-'.\033[m\n\n"
 else
 	printf "Welcome to \033[1;32mBash\033[m, \033[1;93m$USER\033[m!\n"
