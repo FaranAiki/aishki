@@ -37,11 +37,14 @@ function ins() {
 		sudo ./install
 	elif [ -e "./Makefile" ] || [ -e "./makefile" ]; then
 		sudo make install clean
-	elif [ -e "./CMakeLists.txt"]; then
+	elif [ -e "./CMakeLists.txt" ]; then
 		mkdir -p build
 		cd build
 		cmake ..
-		cmake --build . 
+		cmake --build .
+	elif [ -e "../CMakeLists.txt" ]; then
+		cmake ..
+		cmake --build .
 	fi
 }
 
