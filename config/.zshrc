@@ -3,6 +3,12 @@
 # Autoload
 precmd_functions=precmd
 
+# Startup
+function gui_startup() {
+	neofetch 
+	echo
+}
+
 # Function
 function git_branch() {
 	branch=$(git branch 2> /dev/null | cut -d" " -f2-)
@@ -19,7 +25,7 @@ function git_branch() {
 # Manual plugins
 source "/usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 source "/usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
-
+source "/usr/share/zsh/plugins/zsh-autocomplete/zsh-autocomplete.plugin.zsh"
 
 # Input and prompt
 setopt PROMPT_SUBST
@@ -48,5 +54,5 @@ else
 fi
 
 # GUI style
-(neofetch && echo & ) 
+(gui_startup &)
 
