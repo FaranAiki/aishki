@@ -9,14 +9,14 @@ cd $(dirname "$0")
 
 VERSION=0.1
 
-USER="/home/${SUDO_USER}"
-PREFIX="/usr/local"
-MANPREFIX="${PREFIX}/share/man"
-
-if [ "$EUID" -ne 0 ]; then
+if [ "$EUID" -ne 0 ] || ! [ -n "${SUDO_USER+x}" ]; then
 	echo "Please run as root"
 	exit 127
 fi
+
+USER="/home/${SUDO_USER}"
+PREFIX="/usr/local"
+MANPREFIX="${PREFIX}/share/man"
 
 pli_tools() {
 	if [ "$#" -eq 0 ]; then

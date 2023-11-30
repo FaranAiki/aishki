@@ -207,6 +207,10 @@ yay -S aur/vundle-git
 # Setup LaTeX
 sudo pacman -S texlive-formatsextra texlive-latexextra
 
+# Setup zsh and shell
+sudo pacman -S zsh
+yay -S zsh-autocomplete zsh-autosuggestions zsh-syntax-highlighting
+
 # Setup others
 timedatectl
 

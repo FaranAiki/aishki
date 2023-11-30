@@ -9,6 +9,46 @@ function gui_startup() {
 	echo
 }
 
+# Install
+
+function exifex() {
+	if [ "$#" -eq 0 ]; then
+		return
+	fi
+
+	if [ -e "$1" ]; then 
+		$1
+	fi
+}
+
+function ins() {
+	if [ -e "./install" ]; then
+		sudo ./install
+	elif [ -e "./Makefile" ] || [ -e "./makefile" ]; then
+		sudo make install clean
+	elif [ -e "./CMakeLists.txt"]; then
+		mkdir -p build
+		cd build
+		cmake ..
+		cmake --build . 
+	fi
+}
+
+function g() {
+	if [ "$#" -eq 0 ]; then
+		echo Please specify the changes made
+		return
+	else
+		git add .
+		git commit -m "$1"
+	
+		exifex ./git-push
+		exifex ./.git-push
+		exifex ./git_push
+		exifex ./.git_push
+	fi
+}
+
 # Function
 function git_branch() {
 	branch=$(git branch 2> /dev/null | cut -d" " -f2-)
