@@ -91,7 +91,7 @@ source "/usr/share/zsh/plugins/zsh-autocomplete/zsh-autocomplete.plugin.zsh"
 
 # Input and prompt
 setopt PROMPT_SUBST
-export PROMPT='%F{yellow}(%*)%f %F{cyan}%n%f in %F{magenta}%~%f$(git_branch) [%(?.%F{green}0%f.%F{red}%?%f)]%F{blue}\$$f '
+export PROMPT='%F{yellow}(%*)%f %F{cyan}%n%f in %F{magenta}%~%f$(git_branch) [%(?.%F{green}0%f.%F{red}%?%f)]%F{blue}\$%f '
 export PS1="$PROMPT"
 
 # Pacman since I am too lazy
