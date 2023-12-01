@@ -35,15 +35,23 @@ function exifex() {
 function ins() {
 	if [ -e "./install" ]; then
 		sudo ./install
+	elif [ -e "./install.sh" ]; then
+		sudo ./install.sh
 	elif [ -e "./Makefile" ] || [ -e "./makefile" ]; then
-		sudo make install clean
+		sudo make install
 	elif [ -e "./CMakeLists.txt" ]; then
 		mkdir -p build
 		cd build
-		cmake ..
+		if ! [ -e "./CMakeFiles" ]; then
+			cmake ..
+		fi
+
 		cmake --build .
+		cd -
 	elif [ -e "../CMakeLists.txt" ]; then
-		cmake ..
+		if ! [ -e "./CMakeFiles" ]; then
+			cmake ..
+		fi
 		cmake --build .
 	fi
 }
