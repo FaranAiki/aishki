@@ -207,6 +207,9 @@ yay -S aur/vundle-git
 # Setup LaTeX
 sudo pacman -S texlive-formatsextra texlive-latexextra
 
+# Setup touch screen
+sudo pacman -S xf86-input-evdev xf86-input-libinput xf86-input-elographics
+
 # Setup zsh and shell
 sudo pacman -S zsh
 yay -S zsh-autocomplete zsh-autosuggestions zsh-syntax-highlighting
