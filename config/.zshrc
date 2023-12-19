@@ -17,7 +17,10 @@ function gui_startup() {
 	fi
 	
 	neofetch 
-	echo
+}
+
+function cls() {
+	printf '\033[2J\033[3J\033[1;1H'
 }
 
 # Install
@@ -33,12 +36,29 @@ function exifex() {
 }
 
 function ins() {
+	FAST=false
+	arg=""
+	numcpu=$(( $(nproc) - 1 ))
+	if [ "$#" -eq 1 ]; then
+		if [ "$1" = 'fast' ] || [ "$1" = 'FAST' ]; then
+			FAST=true
+		else
+			arg="$1"
+		fi
+	fi
+
 	if [ -e "./install" ]; then
-		sudo ./install
+		sudo ./install $arg
 	elif [ -e "./install.sh" ]; then
-		sudo ./install.sh
+		sudo ./install.sh $arg
+	elif [ -e "./build.sh" ]; then
+		sudo ./build.sh $arg
 	elif [ -e "./Makefile" ] || [ -e "./makefile" ]; then
-		sudo make install
+		if [ "$FAST" = true ]; then
+			sudo make install -j "$numcpu"
+		else
+			sudo make install $arg
+		fi
 	elif [ -e "./CMakeLists.txt" ]; then
 		mkdir -p build
 		cd build
@@ -46,13 +66,39 @@ function ins() {
 			cmake ..
 		fi
 
-		cmake --build .
+		if [ "$FAST" = true ]; then
+			cmake --build . -j "$numcpu"
+		else
+			cmake --build . $arg
+		fi	
+	
 		cd -
+	elif [ -e "meson.build" ]; then
+		mkdir -p build
+		meson setup build
+		if [ "$FAST" = true ]; then
+			ninja -C build -j "$numcpu"
+		else
+			ninja -C build
+		fi
+	elif [ -e "build.ninja" ]; then
+		if [ "$FAST" = true ]; then
+			ninja -C . -j "$numcpu"
+		else
+			ninja -C .
+		fi
 	elif [ -e "../CMakeLists.txt" ]; then
 		if ! [ -e "./CMakeFiles" ]; then
 			cmake ..
 		fi
-		cmake --build .
+
+		if [ "$FAST" = true ]; then
+			cmake --build . -j "$numcpu"
+		else
+			cmake --build . $arg
+		fi	
+	else
+		echo error: no install script found
 	fi
 }
 
@@ -84,6 +130,11 @@ function git_branch() {
  	fi
 }
 
+function aishki() {
+	echo "Installed."
+	echo "ins g exifex"
+}
+
 # Manual plugins
 source "/usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 source "/usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
@@ -94,10 +145,11 @@ setopt PROMPT_SUBST
 export PROMPT='%F{yellow}(%*)%f %F{cyan}%n%f in %F{magenta}%~%f$(git_branch) [%(?.%F{green}0%f.%F{red}%?%f)]%F{blue}\$%f '
 export PS1="$PROMPT"
 
-# Pacman since I am too lazy
+# since I am too lazy
 alias upd="sudo pacman -Syu"
 alias i="yay -S"
 alias ui="yay -Sy"
+alias vr="rm -Rf ~/.cache/vim/swap"
 
 # Others
 export EDITOR=vim
@@ -106,5 +158,4 @@ export EXPLORER=thunar
 export TERMINAL=kitty
 
 # GUI style
-(gui_startup &)
-
+gui_startup

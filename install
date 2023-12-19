@@ -14,8 +14,13 @@ if [ "$EUID" -ne 0 ] || ! [ -n "${SUDO_USER+x}" ]; then
 	exit 127
 fi
 
-USER="/home/${SUDO_USER}"
-PREFIX="/usr/local"
+
+if [ -z "${INSTALL+x}" ]; then
+	INSTALL=""
+fi
+
+USER="${INSTALL}/home/${SUDO_USER}"
+PREFIX="${INSTALL}/usr/local"
 MANPREFIX="${PREFIX}/share/man"
 
 pli_tools() {
@@ -28,6 +33,21 @@ pli_tools() {
 	cp -f "tools/$1.1" "${MANPREFIX}/man1"
 	chmod +x "${PREFIX}/bin/$1"
 	echo "Success"
+}
+
+# TODO use this
+cp_adv() {
+	if [ "$#" -le 2 ]; then
+		exit 1;
+	fi
+
+	if ! $[ "$()" = "/" ]; then
+		mkdir -p "$2"
+		cp -r "$1" "$2"
+	else
+		mkdir -p $(dirname "$2")
+		cp -r "$1" "$2"
+	fi
 }
 
 tools() {
@@ -54,7 +74,15 @@ config() {
 
 	echo "Configuring .zshrc"
 	cp -f "config/.zshrc" "${USER}"
-	
+
+	echo "Configuring vim/nvim"
+	mkdir -p "${USER}/.config/nvim/"
+	cp -f "config/vim/.vimrc" "${USER}/.vimrc"
+	cp -f "config/vim/.vimrc" "${USER}/.config/nvim/init.vim"
+	mkdir -p "${USER}/.vim/"
+	cp -rf "config/vim/templates" "${USER}/.vim/" 
+	cp -rf "config/vim/fshort" "${USER}/.vim/" 
+
 	echo "Finished installing config"
 }
 
