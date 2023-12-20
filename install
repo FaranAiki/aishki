@@ -55,7 +55,8 @@ tools() {
 	mkdir -p "${MANPREFIX}/man1"
 
 	pli_tools mkdesk	
-	pli_tools miplay	
+	pli_tools miplay
+	pli_tools emoji-selector
 
 	echo "Finished installing tools"
 }
@@ -86,9 +87,15 @@ config() {
 	echo "Finished installing config"
 }
 
+data() {
+	cp -f "data/emoji.txt" "${USER}/.local/share"
+}
+
 all() {
 	config
 	tools
+	data
+
 	echo "Finished installing all"
 }
 
@@ -100,9 +107,8 @@ fi
 if [ "$1" == "--help" ]; then
 	echo "Install options:"
 	echo "  --help"
-	echo "  all"
+	echo "  all config data"
 	echo "  tools"
-	echo "  config"
 	echo "  pli_tools"
 	echo
 	echo "Beware that install [COMMAND] will result in the execution of [COMMAND]"
@@ -111,4 +117,4 @@ fi
 
 $1
 
-cd - 
+(cd - )

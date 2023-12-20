@@ -1,0 +1,26 @@
+#!/bin/sh
+
+# Fork of Luke's `dmenuunicode`
+depend_on() {
+	if ! [ -x $(command -v $1) ]; then
+		echo "Please install $1"
+		exit 1
+	fi
+}
+
+depend_on xdotool
+depend_on notify-send
+
+# Get user selection via dmenu from emoji file.
+chosen=$(cat ~/.local/share/emoji.txt | dmenu -i -l 30 | sed "s/ .*//")
+
+# Exit if none chosen.
+[ -z "$chosen" ] && exit
+
+# The opposite of Luke's normal behavior
+if [ -n "$1" ] && [ "$1" == "copy" ]; then
+	xdotool type "$chosen"
+	notify-send "'$chosen' copied to clipboard." &
+else
+	printf "%s" "$chosen" | xargs xdotool type 
+fi
