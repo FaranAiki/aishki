@@ -132,7 +132,8 @@ function git_branch() {
 
 function aishki() {
 	echo "Installed."
-	echo "ins g exifex"
+	echo "ins g exifex git_branch"
+	echo "cls"
 }
 
 # Manual plugins
@@ -146,14 +147,17 @@ export PROMPT='%F{yellow}(%*)%f %F{cyan}%n%f in %F{magenta}%~%f$(git_branch) [%(
 export PS1="$PROMPT"
 
 # since I am too lazy
-alias upd="sudo pacman -Syu"
+alias uu="sudo pacman -Syu"
+alias yu="yay -Syu"
 alias i="yay -S"
 alias ui="yay -Sy"
-alias vr="rm -Rf ~/.cache/vim/swap"
+alias vr="rm -Rf ~/.cache/vim/swap; rm -Rf ~/.local/share/nvim/swap"
+alias e=nvim
+alias s=surf
 
 # Others
-export EDITOR=vim
-export EDITORS=vim
+export EDITOR=nvim
+export EDITORS=nvim
 export EXPLORER=thunar
 export TERMINAL=kitty
 

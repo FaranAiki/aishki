@@ -55,15 +55,23 @@ nnoremap <M-N> :tabe
 inoremap <C-A> <Esc>ggVG$
 nnoremap <C-A> ggVG$
 
+" Shortcut
 inoremap <C-S> <Esc>:w<Enter>i
 nnoremap <C-S> :w<Enter>
 
-inoremap <M-Left> <Esc>:tabp<Enter>i
-nnoremap <M-Left> :tabp<Enter>
+inoremap <C-Left> <Esc>:tabp<Enter>i
+nnoremap <C-Left> :tabp<Enter>
 
-inoremap <M-Right> <Esc>:tabn<Enter>i
-nnoremap <M-Right> :tabn<Enter>
+inoremap <C-Right> <Esc>:tabn<Enter>i
+nnoremap <C-Right> :tabn<Enter>
 
+inoremap <C-Q> <Esc>:wqa<Enter>
+nnoremap <C-Q> :wqa<Enter>
+
+inoremap <C-S-Q> <Esc>:qa!<Enter>
+nnoremap <C-S-Q> :qa!<Enter>
+
+" Copy and paste
 vmap <C-V> yy"+p
 vmap <C-C> "+y
 
@@ -77,7 +85,11 @@ call vundle#begin()
 	Plugin 'sukima/xmledit'
 	Plugin 'lervag/vimtex'
 	Plugin 'pangloss/vim-javascript'
+
 	Plugin 'Shougo/deoplete.nvim'
+	Plugin 'deoplete-plugins/deoplete-clang'
+	Plugin 'deoplete-plugins/deoplete-jedi'
+	Plugin 'sebastianmarkow/deoplete-rust'
 call vundle#end()
 
 " Map for competitive programming and or math
@@ -105,8 +117,18 @@ au BufReadPost *
 
 filetype plugin indent on 
 syntax on
+syntax enable
 
+" Latex setup
 source ~/.vim/fshort/loadall.vim
+
+let g:vimtex_view_method = 'zathura'
+
+" Or with a generic interface:
+let g:vimtex_view_general_viewer = 'okular'
+let g:vimtex_view_general_options = '--unique file:@pdf\#src:@line@tex'
+
+let g:vimtex_compiler_method = 'pdftex'
 
 " TODO use st I guess
 if !has("nvim")

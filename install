@@ -3,6 +3,8 @@
 # (C) Copyright 2023 Muhammad Faran Aiki
 # Installation of my shell scripts
 
+# TODO chown
+
 set -eu
 
 cd $(dirname "$0")
@@ -77,13 +79,15 @@ config() {
 	cp -f "config/.zshrc" "${USER}"
 
 	echo "Configuring vim/nvim"
-	mkdir -p "${USER}/.config/nvim/"
+	mkdir -p "${USER}/.config/nvim/"; chown "${SUDO_USER}" "${USER}/.config/nvim/init.vim"
 	cp -f "config/vim/.vimrc" "${USER}/.vimrc"
 	cp -f "config/vim/.vimrc" "${USER}/.config/nvim/init.vim"
-	mkdir -p "${USER}/.vim/"
+	chown "${SUDO_USER}" "${USER}/.vimrc"
+	chown "${SUDO_USER}" "${USER}/.config/nvim/init.vim"
+	mkdir -p "${USER}/.vim/"; chown "${SUDO_USER}" "${USER}/.vim"
 	cp -rf "config/vim/templates" "${USER}/.vim/" 
 	cp -rf "config/vim/fshort" "${USER}/.vim/" 
-
+	
 	echo "Finished installing config"
 }
 
