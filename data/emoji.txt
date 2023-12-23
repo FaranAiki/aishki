@@ -17,7 +17,7 @@
 🤩 star-struck
 😘 face blowing a kiss
 😗 kissing face
-☺️ smiling face
+☺️  smiling face
 😚 kissing face with closed eyes
 😙 kissing face with smiling eyes
 🥲 smiling face with tear
@@ -71,7 +71,7 @@
 🫤 face with diagonal mouth
 😟 worried face
 🙁 slightly frowning face
-☹️ frowning face
+☹️  frowning face
 😮 face with open mouth
 😯 hushed face
 😲 astonished face
@@ -167,7 +167,7 @@
 👌 OK hand
 🤌 pinched fingers
 🤏 pinching hand
-✌️ victory hand
+✌️  victory hand
 🤞 crossed fingers
 🫰 hand with index finger and thumb crossed
 🤟 love-you gesture

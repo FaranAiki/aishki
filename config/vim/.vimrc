@@ -23,7 +23,9 @@ set tabstop=4
 set mouse=a
 
 " Let's use vim 
-let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/ycm_extra_conf.py'
+if has("vim")
+	let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/ycm_extra_conf.py'
+endif
 
 " Relative line mixing
 inoremap <expr> <C-L> &relativenumber == 1 ? '<Esc>:set number<Enter>:set norelativenumber<Enter>i' : '<Esc>:set relativenumber<Enter>:set number<Enter>i'
@@ -52,8 +54,14 @@ inoremap (<CR> (<CR>)<ESC>O
 inoremap <M-N> <Esc>:tabe
 nnoremap <M-N> :tabe 
 
+" Movement
 inoremap <C-A> <Esc>ggVG$
 nnoremap <C-A> ggVG$
+
+nnoremap <C-J> gj
+nnoremap <C-K> gk
+nnoremap <C-Down> gj
+nnoremap <C-Up> gk
 
 " Shortcut
 inoremap <C-S> <Esc>:w<Enter>i
@@ -68,8 +76,8 @@ nnoremap <C-Right> :tabn<Enter>
 inoremap <C-Q> <Esc>:wqa<Enter>
 nnoremap <C-Q> :wqa<Enter>
 
-inoremap <C-S-Q> <Esc>:qa!<Enter>
-nnoremap <C-S-Q> :qa!<Enter>
+inoremap <C-M-Q> <Esc>:qa!<Enter>
+nnoremap <C-M-Q> :qa!<Enter>
 
 " Copy and paste
 vmap <C-V> yy"+p
@@ -86,11 +94,49 @@ call vundle#begin()
 	Plugin 'lervag/vimtex'
 	Plugin 'pangloss/vim-javascript'
 
+if has("nvim")
 	Plugin 'Shougo/deoplete.nvim'
+	Plugin 'mattn/vim-lsp-settings'
+	Plugin 'zchee/libclang-python3'
+	Plugin 'lighttiger2505/deoplete-vim-lsp'	
 	Plugin 'deoplete-plugins/deoplete-clang'
 	Plugin 'deoplete-plugins/deoplete-jedi'
+	Plugin 'deoplete-plugins/deoplete-go'
 	Plugin 'sebastianmarkow/deoplete-rust'
+	Plugin 'JuliaEditorSupport/deoplete-julia'	
+
+	Plugin 'prabirshrestha/vim-lsp'
+
+endif
+
 call vundle#end()
+
+" LSP
+
+" setting with vim-lsp
+if executable('ccls')
+   au User lsp_setup call lsp#register_server({
+      \ 'name': 'ccls',
+      \ 'cmd': {server_info->['ccls']},
+      \ 'root_uri': {server_info->lsp#utils#path_to_uri(
+      \   lsp#utils#find_nearest_parent_file_directory(
+      \     lsp#utils#get_buffer_path(), ['.ccls', 'compile_commands.json', '.git/']))},
+      \ 'initialization_options': {
+      \   'highlight': { 'lsRanges' : v:true },
+      \   'cache': {'directory': stdpath('cache') . '/ccls' },
+      \ },
+      \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp', 'cc'],
+      \ })
+endif
+
+if executable('pyls')
+    " pip install python-language-server
+    au User lsp_setup call lsp#register_server({
+        \ 'name': 'pyls',
+        \ 'cmd': {server_info->['pyls']},
+        \ 'allowlist': ['python'],
+        \ })
+endif
 
 " Map for competitive programming and or math
 
@@ -135,7 +181,26 @@ if !has("nvim")
 	set term=kitty
 endif
 
+" Nowadays, I use nvim since it is more cool
 if has("nvim")
 	let g:deoplete#enable_at_startup = 1
 	call deoplete#enable()
 endif
+
+" GUI in Neovide
+
+let s:guifont_size = 8
+let s:guifont_name = "Source\\ Code\\ Pro"
+
+function! AdjustFontSize(amount)
+	let s:guifont_size = s:guifont_size + a:amount
+	exe "set guifont=" .. s:guifont_name .. ":h" .. s:guifont_size
+endfunction
+
+if exists("g:neovide")
+	call AdjustFontSize(0) 
+endif
+
+nnoremap <C-+> :call AdjustFontSize(1)<Enter>
+nnoremap <C-_> :call AdjustFontSize(-1)<Enter>
+

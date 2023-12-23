@@ -131,6 +131,16 @@ printf "Download the drivers for printer yourself."
 # Install advanced drivers
 yay -S b43-firmware
 
+# Downloading environment resources
+
+# Setting environment resources
+
+# Making things easier
+sudo cp $__pacstrap_to/etc/pacman.d/mirrorlist $__pacstrap_to/etc/pacman.d/mirrorlist.backup
+sudo awk '/^## Country Name$/{f=1; next}f==0{next}/^$/{exit}{print substr($0, 1);}' $__pacstrap_to/etc/pacman.d/mirrorlist.backup
+sudo sed -i 's/^#Server/Server/' $__pacstrap_to/etc/pacman.d/mirrorlist.backup
+sudo rankmirrors -n 6 $__pacstrap_to/etc/pacman.d/mirrorlist.backup > $__pacstrap_to/etc/pacman.d/mirrorlist
+
 # Install applications
 sudo pacman -S krita lmms # Install "real" LMMS on your own
 
@@ -164,16 +174,6 @@ yay -S firefox chromium brave
 
 # Install virtual machineys
 pacman -S qemu virt-manager virt-viewer dnsmasq vde2 bridge-utils openbsd-netcat libguestfs virtualbox
-
-# Downloading environment resources
-
-# Setting environment resources
-
-# Making things easier
-sudo cp $__pacstrap_to/etc/pacman.d/mirrorlist $__pacstrap_to/etc/pacman.d/mirrorlist.backup
-sudo awk '/^## Country Name$/{f=1; next}f==0{next}/^$/{exit}{print substr($0, 1);}' $__pacstrap_to/etc/pacman.d/mirrorlist.backup
-sudo sed -i 's/^#Server/Server/' $__pacstrap_to/etc/pacman.d/mirrorlist.backup
-sudo rankmirrors -n 6 $__pacstrap_to/etc/pacman.d/mirrorlist.backup > $__pacstrap_to/etc/pacman.d/mirrorlist
 
 # Setting WINE
 winetricks settings fontsmooth=rgb
@@ -211,8 +211,12 @@ sudo pacman -S texlive-formatsextra texlive-latexextra
 sudo pacman -S xf86-input-evdev xf86-input-libinput xf86-input-elographics
 
 # Setup zsh and shell
-sudo pacman -S zsh
+sudo pacman -S zsh dash
 yay -S zsh-autocomplete zsh-autosuggestions zsh-syntax-highlighting
+
+# Setup for Audio Workstation
+pacman -S dexed zynaddsubfx surge
+yay -S vital
 
 # Setup others
 timedatectl
