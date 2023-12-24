@@ -47,58 +47,81 @@ function ins() {
 		fi
 	fi
 
-	if [ -e "./install" ]; then
-		sudo ./install $arg
-	elif [ -e "./install.sh" ]; then
-		sudo ./install.sh $arg
-	elif [ -e "./build.sh" ]; then
-		sudo ./build.sh $arg
-	elif [ -e "./Makefile" ] || [ -e "./makefile" ]; then
-		if [ "$FAST" = true ]; then
-			sudo make install -j "$numcpu"
-		else
-			sudo make install $arg
-		fi
-	elif [ -e "./CMakeLists.txt" ]; then
-		mkdir -p build
-		cd build
-		if ! [ -e "./CMakeFiles" ]; then
-			cmake ..
-		fi
-
-		if [ "$FAST" = true ]; then
-			cmake --build . -j "$numcpu"
-		else
-			cmake --build . $arg
-		fi	
+	didrun=false
+	(pushd . > /dev/null )
+	while [ $(pwd) != "/" ]; do
+		if [ -e "./install" ]; then
+			chmod +x ./install
+			sudo ./install $arg
+			didrun=true; break # TODO what the heck is finally equivalent to in bash?
+		elif [ -e "./install.sh" ]; then
+			chmod +x ./install.sh
+			sudo ./install.sh $arg
+			didrun=true; break
+		elif [ -e "./build.sh" ]; then
+			chmod +x ./build.sh
+			sudo ./build.sh $arg
+			didrun=true; break
+		elif [ -e "./build" ]; then
+			chmod +x ./build.sh
+			sudo ./build $arg
+			didrun=true; break
+		elif [ -e "./Makefile" ] || [ -e "./makefile" ]; then
+			if [ "$FAST" = true ]; then
+				sudo make install -j "$numcpu"
+			else
+				sudo make install $arg
+			fi
+			didrun=true; break
+		elif [ -e "./CMakeLists.txt" ]; then
+			mkdir -p build
+			cd build
+			if ! [ -e "./CMakeFiles" ]; then
+				cmake ..
+			fi
 	
-		cd -
-	elif [ -e "meson.build" ]; then
-		mkdir -p build
-		meson setup build
-		if [ "$FAST" = true ]; then
-			ninja -C build -j "$numcpu"
-		else
-			ninja -C build
+			if [ "$FAST" = true ]; then
+				cmake --build . -j "$numcpu"
+			else
+				cmake --build . $arg
+			fi	
+		
+			cd -
+			didrun=true; break
+		elif [ -e "meson.build" ]; then
+			mkdir -p build
+			meson setup build
+			if [ "$FAST" = true ]; then
+				ninja -C build -j "$numcpu"
+			else
+				ninja -C build
+			fi
+			didrun=true; break
+		elif [ -e "build.ninja" ]; then
+			if [ "$FAST" = true ]; then
+				ninja -C . -j "$numcpu"
+			else
+				ninja -C .
+			fi
+			didrun=true; break
+		elif [ -e "../CMakeLists.txt" ]; then
+			if ! [ -e "./CMakeFiles" ]; then
+				cmake ..
+			fi
+	
+			if [ "$FAST" = true ]; then
+				cmake --build . -j "$numcpu"
+			else
+				cmake --build . $arg
+			fi
+			didrun=true; break
 		fi
-	elif [ -e "build.ninja" ]; then
-		if [ "$FAST" = true ]; then
-			ninja -C . -j "$numcpu"
-		else
-			ninja -C .
-		fi
-	elif [ -e "../CMakeLists.txt" ]; then
-		if ! [ -e "./CMakeFiles" ]; then
-			cmake ..
-		fi
+		cd ..
+	done
+	(popd > /dev/null )
 
-		if [ "$FAST" = true ]; then
-			cmake --build . -j "$numcpu"
-		else
-			cmake --build . $arg
-		fi	
-	else
-		echo error: no install script found
+	if [ "$didrun" = false ]; then
+		printf "\033[0;31merror: no installation found\033[0m\n"	
 	fi
 }
 
@@ -151,7 +174,7 @@ alias uu="sudo pacman -Syu"
 alias yu="yay -Syu"
 alias i="yay -S"
 alias ui="yay -Sy"
-alias vr="rm -Rf ~/.cache/vim/swap; rm -Rf ~/.local/share/nvim/swap"
+alias vr="rm -Rf ~/.cache/vim/swap; rm -Rf ~/.local/share/nvim/swap; rm -Rf ~/.local/state/nvim/swap/"
 alias e=nvim
 alias s=surf
 
@@ -160,6 +183,9 @@ export EDITOR=nvim
 export EDITORS=nvim
 export EXPLORER=thunar
 export TERMINAL=kitty
+
+# Export config
+export KITTY_CONFIG_DIRECTORY=~/.config/kitty/
 
 # GUI style
 gui_startup

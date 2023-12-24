@@ -1,4 +1,4 @@
-" Vim configuration files
+" Vim/NVim configuration files
 
 " Muhammad Faran Aiki
 " This is for both competitive programming and normal programming
@@ -8,7 +8,11 @@ filetype plugin indent off
 syntax off
 
 " Vundle
+" if !has("nvim")
 set rtp+=~/.vim/bundle/Vundle.vim
+" else
+" set rtp?
+" endif
 
 set nocompatible
 
@@ -52,11 +56,14 @@ inoremap [<CR> [<CR>]<ESC>O
 inoremap (<CR> (<CR>)<ESC>O
 
 inoremap <M-N> <Esc>:tabe
-nnoremap <M-N> :tabe 
+inoremap <M-N> <Esc>:tabe
 
 " Movement
 inoremap <C-A> <Esc>ggVG$
 nnoremap <C-A> ggVG$
+
+inoremap <C-Down> <Esc>gji<Right>
+inoremap <C-Up> <Esc>gki<Right>
 
 nnoremap <C-J> gj
 nnoremap <C-K> gk
@@ -65,25 +72,25 @@ nnoremap <C-Up> gk
 
 " Shortcut
 inoremap <C-S> <Esc>:w<Enter>i
-nnoremap <C-S> :w<Enter>
+nnoremap <C-S> <Esc>:w<Enter>
 
 inoremap <C-Left> <Esc>:tabp<Enter>i
-nnoremap <C-Left> :tabp<Enter>
+nnoremap <C-Left> <Esc>:tabp<Enter>
 
 inoremap <C-Right> <Esc>:tabn<Enter>i
-nnoremap <C-Right> :tabn<Enter>
+nnoremap <C-Right> <Esc>:tabn<Enter>
 
-inoremap <C-Q> <Esc>:wqa<Enter>
-nnoremap <C-Q> :wqa<Enter>
+inoremap <C-Q> <Esc>:mkses!<Enter>:wqa<Enter>
+nnoremap <C-Q> <Esc>:mkses!<Enter>:wqa<Enter>
 
 inoremap <C-M-Q> <Esc>:qa!<Enter>
-nnoremap <C-M-Q> :qa!<Enter>
+nnoremap <C-M-Q> <Esc>:qa!<Enter>
 
 " Copy and paste
 vmap <C-V> yy"+p
 vmap <C-C> "+y
 
-" Using Vundle
+" Using Vundle, using PluginInstall
 call vundle#begin()
 	Plugin 'VundleVim/Vundle.vim'
 	Plugin 'hallettj/jslint.vim'
