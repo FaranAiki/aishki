@@ -119,6 +119,8 @@ if [ "$1" == "--help" ]; then
 	exit 1
 fi
 
-$1
+for arg in "$@"; do
+	$arg
+done
 
 (cd - )

@@ -1,16 +1,37 @@
 `aishki` is a compilation of shell script used
-by me to integrate nihwm and others to be a 
+by me to integrate nih, shells, and others to be a 
 good united "Desktop Environment"
 
+and I use this often in my daily desktop
+
 List of config available:
-	..
+	.zshrc
+	.bashrc
+	.vim
 
 List of tools available:
 	mkdesk
 		to create a [Desktop Entry] for `rofi -show drun`
 
+	miplay
+		to download youtube music from... YouTube
+		use Rhythmbox as the first opener
+
+	emoji-selector
+		the implementation is very similar as Luke's 
+		emoji-selector (instead of unicode, this focuses on emoji)
+
 To install in to the system, type:
 	./install [COMMAND]
 	# ./install all    -> will install config, tools, ...
 	# ./install tools  -> will only install tools
-	# ./install echo 3 -> will output 3
+	# ./install config -> will only install config [asks if the user really want to replace it]
+	# ./install data   -> will only install the data
+	# ./install echo 3 -> will give error because 3 is not a command
+	
+	for example
+		./install config data
+		./install tools
+
+	or, if you use aishki's .zshrc, just type
+		> ins
