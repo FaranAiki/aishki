@@ -48,7 +48,7 @@ function ins() {
 	fi
 
 	didrun=false
-	(pushd . > /dev/null )
+	curdir="$(pwd)"
 	while [ $(pwd) != "/" ]; do
 		if [ -e "./install" ]; then
 			chmod +x ./install
@@ -118,7 +118,7 @@ function ins() {
 		fi
 		cd ..
 	done
-	(popd > /dev/null )
+	cd "$curdir"
 
 	if [ "$didrun" = false ]; then
 		printf "\033[0;31merror: no installation found\033[0m\n"	
@@ -132,7 +132,7 @@ function g() {
 	fi
 
 	didrun=false;
-	(pushd . > /dev/null )
+	curdir="$(pwd)"
 	while [ "$(pwd)" != "/" ]; do
 		if [ -e ".git" ]; then
 			git add .
@@ -145,7 +145,7 @@ function g() {
 			didrun=true; break
 		fi
 	done
-	(popd > /dev/null)
+	cd "$curdir"
 
 	if [ "$didrun" = false ]; then
 		printf "\033[0;31merror: no git found\033[0m\n"	
