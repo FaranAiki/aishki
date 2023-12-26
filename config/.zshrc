@@ -129,14 +129,26 @@ function g() {
 	if [ "$#" -eq 0 ]; then
 		echo Please specify the changes made
 		return
-	else
-		git add .
-		git commit -m "$1"
-	
-		exifex ./git-push
-		exifex ./.git-push
-		exifex ./git_push
-		exifex ./.git_push
+	fi
+
+	didrun=false;
+	(pushd . > /dev/null )
+	while [ "$(pwd)" != "/" ]; do
+		if [ -e ".git" ]; then
+			git add .
+			git commit -m "$1"
+		
+			exifex ./git-push
+			exifex ./.git-push
+			exifex ./git_push
+			exifex ./.git_push
+			didrun=true; break
+		fi
+	done
+	(popd > /dev/null)
+
+	if [ "$didrun" = false ]; then
+		printf "\033[0;31merror: no git found\033[0m\n"	
 	fi
 }
 
@@ -184,7 +196,7 @@ export EDITORS=nvim
 export EXPLORER=thunar
 export TERMINAL=kitty
 
-# Export config
+# Export application config
 export KITTY_CONFIG_DIRECTORY=~/.config/kitty/
 
 # GUI style
