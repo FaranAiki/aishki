@@ -111,12 +111,19 @@ if has("nvim")
 	Plugin 'deoplete-plugins/deoplete-go'
 	Plugin 'sebastianmarkow/deoplete-rust'
 	Plugin 'JuliaEditorSupport/deoplete-julia'	
+	Plugin 'simrat39/symbols-outline.nvim'
+	Plugin 'preservim/nerdtree'
 
 	Plugin 'prabirshrestha/vim-lsp'
-
 endif
 
 call vundle#end()
+
+" NerdTREE
+nnoremap <leader>n :NERDTreeFocus<CR>
+nnoremap <C-n> :NERDTree<CR>
+nnoremap <C-t> :NERDTreeToggle<CR>
+nnoremap <C-f> :NERDTreeFind<CR>
 
 " LSP
 
@@ -136,6 +143,7 @@ if executable('ccls')
       \ })
 endif
 
+" Pyls
 if executable('pyls')
     " pip install python-language-server
     au User lsp_setup call lsp#register_server({

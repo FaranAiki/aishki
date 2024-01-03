@@ -79,11 +79,11 @@ config() {
 	cp -f "config/.zshrc" "${USER}"
 
 	echo "Configuring vim/nvim"
-	mkdir -p "${USER}/.config/nvim/"; chown "${SUDO_USER}" "${USER}/.config/nvim/init.vim"
-	cp -f "config/vim/.vimrc" "${USER}/.vimrc"
-	cp -f "config/vim/.vimrc" "${USER}/.config/nvim/init.vim"
+	mkdir -p "${USER}/.config/nvim/"; chown "${SUDO_USER}" "${USER}/.config/nvim/"
+	cp -f "config/vim/.vimrc" "${USER}/.vimrc" # vim
+	cp -f "config/vim/nvim.lua" "${USER}/.config/nvim/init.lua"
 	chown "${SUDO_USER}" "${USER}/.vimrc"
-	chown "${SUDO_USER}" "${USER}/.config/nvim/init.vim"
+	chown "${SUDO_USER}" "${USER}/.config/nvim/init.lua"
 	mkdir -p "${USER}/.vim/"; chown "${SUDO_USER}" "${USER}/.vim"
 	cp -rf "config/vim/templates" "${USER}/.vim/" 
 	cp -rf "config/vim/fshort" "${USER}/.vim/" 
@@ -92,7 +92,9 @@ config() {
 }
 
 data() {
+	echo "Installing emoji/utf things"
 	cp -f "data/emoji.txt" "${USER}/.local/share"
+	echo "Finished installing data"
 }
 
 all() {

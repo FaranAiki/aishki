@@ -8,8 +8,6 @@
 # See a YouTube video on this
 # TODO INCOMING
 
-set -eu
-
 depend_on() {
 	if ! [ -x $(command -v $1) ]; then
 		echo Please install package which offers $1
@@ -30,12 +28,12 @@ if [ "$1" = "-w" ] || [ "$1" = "--win" ] || [ "$1" = "--exe" ]; then
 	icondir="$local_icondir"
 
 	fullpath=$(realpath -s "$2")
-	fname=${2%.*};
+	fname=$(basename "${2%.*}");
 
 	if [ "$3" == "" ]; then
 		modfname=$fname
 	else 
-		modfname="$3"
+		modfname=$3
 	fi
 
 	out="${appdir}/${modfname}.desktop"
@@ -70,6 +68,7 @@ if [ "$1" = "-w" ] || [ "$1" = "--win" ] || [ "$1" = "--exe" ]; then
 	echo "Finished"
 elif [ "$1" = "-l" ] || [ "$1" = "--linux" ]; then
 	#TODO implement Linux
+	echo Implement Linux
 elif [ "$1" = "-d" ] || [ "$1" = "--del" ] || [ "$1" = "--delete" ]; then
 	appdir="$local_appdir"
 	icondir="$local_icondir"

@@ -15,8 +15,8 @@ function gui_startup() {
 		printf "Welcome to \033[1;32mzsh\033[m, \033[1;93m$USER\033[m!\n"
 		printf "Flags used in this 'zsh' are \033[1;34m'$-'.\033[m\n\n"
 	fi
-	
-	neofetch 
+
+	# neofetch 
 }
 
 function cls() {
