@@ -31,65 +31,6 @@ if has("vim")
 	let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/ycm_extra_conf.py'
 endif
 
-" Relative line mixing
-inoremap <expr> <C-L> &relativenumber == 1 ? '<Esc>:set number<Enter>:set norelativenumber<Enter>i' : '<Esc>:set relativenumber<Enter>:set number<Enter>i'
-nnoremap <expr> <C-L> &relativenumber == 1 ? '<Esc>:set number<Enter>:set norelativenumber<Enter>' : '<Esc>:set relativenumber<Enter>:set number<Enter>'
-
-" Set some thing
-inoremap { {}<Left>
-inoremap {} {}
-inoremap [ []<Left>
-inoremap [] []
-inoremap ( ()<Left>
-inoremap () ()
-inoremap " ""<Left>
-inoremap "" ""
-inoremap ' ''<Left>
-inoremap '' ''
-
-inoremap < <><Left>
-inoremap <<Space> <<Space>
-inoremap << <<
-
-inoremap {<CR> {<CR>}<ESC>O
-inoremap [<CR> [<CR>]<ESC>O
-inoremap (<CR> (<CR>)<ESC>O
-
-inoremap <M-N> <Esc>:tabe
-inoremap <M-N> <Esc>:tabe
-
-" Movement
-inoremap <C-A> <Esc>ggVG$
-nnoremap <C-A> ggVG$
-
-inoremap <C-Down> <Esc>gji<Right>
-inoremap <C-Up> <Esc>gki<Right>
-
-nnoremap <C-J> gj
-nnoremap <C-K> gk
-nnoremap <C-Down> gj
-nnoremap <C-Up> gk
-
-" Shortcut
-inoremap <C-S> <Esc>:w<Enter>i
-nnoremap <C-S> <Esc>:w<Enter>
-
-inoremap <C-Left> <Esc>:tabp<Enter>i
-nnoremap <C-Left> <Esc>:tabp<Enter>
-
-inoremap <C-Right> <Esc>:tabn<Enter>i
-nnoremap <C-Right> <Esc>:tabn<Enter>
-
-inoremap <C-Q> <Esc>:mkses!<Enter>:wqa<Enter>
-nnoremap <C-Q> <Esc>:mkses!<Enter>:wqa<Enter>
-
-inoremap <C-M-Q> <Esc>:qa!<Enter>
-nnoremap <C-M-Q> <Esc>:qa!<Enter>
-
-" Copy and paste
-vmap <C-V> yy"+p
-vmap <C-C> "+y
-
 " Using Vundle, using PluginInstall
 call vundle#begin()
 	Plugin 'VundleVim/Vundle.vim'
@@ -100,6 +41,7 @@ call vundle#begin()
 	Plugin 'sukima/xmledit'
 	Plugin 'lervag/vimtex'
 	Plugin 'pangloss/vim-javascript'
+	Plugin 'jiangmiao/auto-pairs'
 
 if has("nvim")
 	Plugin 'Shougo/deoplete.nvim'
@@ -118,6 +60,10 @@ if has("nvim")
 endif
 
 call vundle#end()
+
+" Auto-Pairs
+let g:AutoPairsFlyMode = 1
+let g:AutoPairsShortcutBackInsert = '<M-b>'
 
 " NerdTREE
 nnoremap <leader>n :NERDTreeFocus<CR>
@@ -218,4 +164,65 @@ endif
 
 nnoremap <C-+> :call AdjustFontSize(1)<Enter>
 nnoremap <C-_> :call AdjustFontSize(-1)<Enter>
+
+" Relative line mixing
+inoremap <expr> <C-L> &relativenumber == 1 ? '<Esc>:set number<Enter>:set norelativenumber<Enter>i' : '<Esc>:set relativenumber<Enter>:set number<Enter>i'
+nnoremap <expr> <C-L> &relativenumber == 1 ? '<Esc>:set number<Enter>:set norelativenumber<Enter>' : '<Esc>:set relativenumber<Enter>:set number<Enter>'
+
+" Set some thing
+if !g:AutoPairsFlyMode
+	inoremap { {}<Left>
+	inoremap {} {}
+	inoremap [ []<Left>
+	inoremap [] []
+	inoremap ( ()<Left>
+	inoremap () ()
+	inoremap " ""<Left>
+	inoremap "" ""
+	inoremap ' ''<Left>
+	inoremap '' ''
+endif
+
+inoremap < <><Left>
+inoremap <<Space> <<Space>
+inoremap << <<
+
+inoremap {<CR> {<CR>}<ESC>O
+inoremap [<CR> [<CR>]<ESC>O
+inoremap (<CR> (<CR>)<ESC>O
+
+inoremap <M-N> <Esc>:tabe
+inoremap <M-N> <Esc>:tabe
+
+" Movement
+inoremap <C-A> <Esc>ggVG$
+nnoremap <C-A> ggVG$
+
+inoremap <C-Down> <Esc>gji<Right>
+inoremap <C-Up> <Esc>gki<Right>
+
+nnoremap <C-J> gj
+nnoremap <C-K> gk
+nnoremap <C-Down> gj
+nnoremap <C-Up> gk
+
+" Shortcut
+inoremap <C-S> <Esc>:w<Enter>i
+nnoremap <C-S> <Esc>:w<Enter>
+
+inoremap <C-Left> <Esc>:tabp<Enter>i
+nnoremap <C-Left> <Esc>:tabp<Enter>
+
+inoremap <C-Right> <Esc>:tabn<Enter>i
+nnoremap <C-Right> <Esc>:tabn<Enter>
+
+inoremap <C-Q> <Esc>:mkses!<Enter>:wqa<Enter>
+nnoremap <C-Q> <Esc>:mkses!<Enter>:wqa<Enter>
+
+inoremap <C-M-Q> <Esc>:qa!<Enter>
+nnoremap <C-M-Q> <Esc>:qa!<Enter>
+
+" Copy and paste
+vmap <C-V> yy"+p
+vmap <C-C> "+y
 
